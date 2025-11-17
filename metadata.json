@@ -1,0 +1,5 @@
+{
+  "name": "AI tạo Prompt truyện tranh đồng bộ nhân vật",
+  "description": "Một ứng dụng dành cho giáo viên và người kể chuyện để tạo ra các gợi ý truyện tranh nhất quán từ ý tưởng câu chuyện. Ứng dụng giúp xác định ngoại hình nhân vật và đảm bảo chúng nhất quán qua nhiều cảnh.",
+  "requestFramePermissions": []
+}
