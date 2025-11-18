@@ -24,8 +24,9 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ apiKey, setApiKey }) => {
 
   const handleSave = () => {
     if (!inputValue.trim()) return;
-    localStorage.setItem('gemini_api_key', inputValue);
-    setApiKey(inputValue);
+    const keyToSave = inputValue.trim();
+    localStorage.setItem('gemini_api_key', keyToSave);
+    setApiKey(keyToSave);
     setSaveSuccess(true);
     setInputValue('');
     setCheckStatus(null);
@@ -48,10 +49,29 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ apiKey, setApiKey }) => {
     try {
         const result = await checkApiKey(inputValue.trim());
         setCheckStatus(result);
+        
+        // Auto-save if valid
+        if (result.success) {
+             const keyToSave = inputValue.trim();
+             localStorage.setItem('gemini_api_key', keyToSave);
+             setApiKey(keyToSave);
+             setSaveSuccess(true);
+             setInputValue(''); 
+             setTimeout(() => {
+                setSaveSuccess(false);
+                setIsOpen(false);
+            }, 1500);
+        }
     } catch (e) {
         setCheckStatus({ success: false, message: "Đã xảy ra lỗi cục bộ khi kiểm tra." });
     } finally {
         setIsChecking(false);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+        handleSave();
     }
   };
 
@@ -108,6 +128,7 @@ const ApiKeyManager: React.FC<ApiKeyManagerProps> = ({ apiKey, setApiKey }) => {
                   setInputValue(e.target.value)
                   setCheckStatus(null)
                 }}
+                onKeyDown={handleKeyDown}
                 placeholder="Dán API Key của bạn (ví dụ: AIza...)"
                 className="w-full px-4 py-2 bg-slate-800 border border-slate-500 rounded-md text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />

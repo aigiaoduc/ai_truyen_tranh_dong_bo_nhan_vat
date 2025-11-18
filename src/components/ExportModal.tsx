@@ -21,11 +21,36 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose, prompts }) =
       .join('\n');
   }, [prompts, activeTab]);
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     if (allPromptsText) {
-      navigator.clipboard.writeText(allPromptsText);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+      try {
+        await navigator.clipboard.writeText(allPromptsText);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.warn('Clipboard API failed, trying fallback...', err);
+        try {
+          const textArea = document.createElement("textarea");
+          textArea.value = allPromptsText;
+          textArea.style.position = "fixed";
+          textArea.style.left = "-9999px";
+          textArea.style.top = "0";
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+          const successful = document.execCommand('copy');
+          document.body.removeChild(textArea);
+          if (successful) {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+          } else {
+             alert("Không thể sao chép. Vui lòng chọn và sao chép thủ công.");
+          }
+        } catch (fallbackErr) {
+          console.error('Fallback copy failed', fallbackErr);
+          alert("Không thể sao chép. Vui lòng chọn và sao chép thủ công.");
+        }
+      }
     }
   };
 

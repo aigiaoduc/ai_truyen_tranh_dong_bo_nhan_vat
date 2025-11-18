@@ -79,13 +79,13 @@ const App: React.FC = () => {
     };
 
     const noSignatureRule = {
-        vi: "YÊU CẦU QUAN TRỌNG: Hình ảnh không được chứa bất kỳ chữ ký, watermark, logo, hoặc tên nghệ sĩ.",
-        en: "IMPORTANT REQUIREMENT: The image must not contain any signatures, watermarks, logos, or artist names."
+        vi: "YÊU CẦU QUAN TRỌNG: Hình ảnh không được chứa bất kỳ watermark, logo, hoặc tên nghệ sĩ.",
+        en: "IMPORTANT REQUIREMENT: The image must not contain any watermarks, logos, or artist names."
     };
 
     const negativePrompt = {
-        vi: "YẾU TỐ CẦN TRÁNH: biến dạng, dị dạng, tay chân thừa, ngón tay thừa, tay chân bị cắt xén, các bộ phận cơ thể bị trộn lẫn, giải phẫu không chính xác, 2 đầu, cơ thể méo mó, chữ ký, watermark.",
-        en: "AVOID: deformed, malformed, extra limbs, extra fingers, cropped limbs, fused body parts, incorrect anatomy, two heads, distorted body, signature, watermark."
+        vi: "YẾU TỐ CẦN TRÁNH: biến dạng, dị dạng, tay chân thừa, ngón tay thừa, tay chân bị cắt xén, các bộ phận cơ thể bị trộn lẫn, giải phẫu không chính xác, 2 đầu, cơ thể méo mó, watermark.",
+        en: "AVOID: deformed, malformed, extra limbs, extra fingers, cropped limbs, fused body parts, incorrect anatomy, two heads, distorted body, watermark."
     };
 
     return data.scenes.map(scene => {

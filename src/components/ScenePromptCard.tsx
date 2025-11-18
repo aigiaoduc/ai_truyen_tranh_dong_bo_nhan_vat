@@ -11,11 +11,36 @@ const ScenePromptCard: React.FC<ScenePromptCardProps> = ({ scene }) => {
   const [activeTab, setActiveTab] = useState<'vi' | 'en'>('vi');
   const [copied, setCopied] = useState(false);
 
-  const handleCopy = () => {
+  const handleCopy = async () => {
     const textToCopy = scene.prompts[activeTab];
-    navigator.clipboard.writeText(textToCopy);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(textToCopy);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.warn('Clipboard API failed, trying fallback...', err);
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = textToCopy;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        } else {
+           alert("Không thể sao chép. Vui lòng chọn và sao chép thủ công.");
+        }
+      } catch (fallbackErr) {
+        console.error('Fallback copy failed', fallbackErr);
+        alert("Không thể sao chép. Vui lòng chọn và sao chép thủ công.");
+      }
+    }
   };
   
   const currentPrompt = scene.prompts[activeTab];
@@ -45,6 +70,7 @@ const ScenePromptCard: React.FC<ScenePromptCardProps> = ({ scene }) => {
                     onClick={handleCopy}
                     className="p-1.5 bg-slate-700/50 rounded-md text-slate-400 hover:bg-slate-600 hover:text-white transition-all duration-200"
                     aria-label="Sao chép lệnh"
+                    title="Sao chép"
                 >
                     {copied ? (
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
